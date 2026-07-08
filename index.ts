@@ -1,12 +1,15 @@
 import express, { Application } from "express";
+import { connectToDb } from "./config/db";
 const app: Application = express();
 const port = 3000;
+require("dotenv").config();
 const authRouter = require("./routes/auth");
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} ${new Date().toISOString()}`);
   next();
 });
+connectToDb();
 
 app.use("/auth", authRouter);
 
