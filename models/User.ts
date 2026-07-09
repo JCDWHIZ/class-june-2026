@@ -1,4 +1,5 @@
 import mongoose, { model, mongo, Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new Schema({
   firstName: {
@@ -20,6 +21,13 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+});
+
+userSchema.pre("save", async function () {
+  if (this.isModified("password")) {
+    const encryptedPassword = await bcrypt.hash(this.password, 10);
+    this.password = encryptedPassword;
+  }
 });
 // const userSchema = new Schema({
 //   firstName: {
